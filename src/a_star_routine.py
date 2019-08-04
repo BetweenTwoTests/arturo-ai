@@ -38,8 +38,8 @@ for edges in obstacle_edges:
     obstacles[edges] = True
 
 
-good_agent = "D2-4D79"
-bad_agents = ["Q5-8CC0", "D2-6F8D"]
+good_agent = "D2-0709"
+bad_agents = ["D2-4D79", "D2-6F8D"]
 
 G = Graph(
     obstacles = obstacles,
@@ -54,16 +54,17 @@ G = Graph(
 goal = (4, 7)
 print("Game start!")
 G.print()
+
 while True:
     if(G.agent_positions[good_agent] == goal):
         break
 
     # GOOD AGENT
-    # path_good_agent = G.get_agent_move(good_agent, 
-    #     strategy = "A_star", 
-    #     min_bound = G.get_agent_position(good_agent),
-    #     max_bound = goal)
-    # G.move_agent(good_agent, path_good_agent)    
+    path_good_agent = G.get_agent_move(good_agent, 
+        strategy = "A_star", 
+        min_bound = G.get_agent_position(good_agent),
+        max_bound = goal)
+    G.move_agent(good_agent, path_good_agent)    
     G.print()
     
     # BAD AGENTS
