@@ -38,17 +38,17 @@ for edges in obstacle_edges:
     obstacles[edges] = True
 
 
-good_agent = "Q5-8CC0"
-bad_agents = ["D2-6F8D", "D2-4D79"]
+good_agent = "D2-4D79"
+bad_agents = ["Q5-8CC0", "D2-6F8D"]
 
 G = Graph(
     obstacles = obstacles,
     agent_positions = {
         good_agent : (0,0),
-        bad_agents[0] : (1,6),
-        bad_agents[1] : (0,3)
+        bad_agents[0] : (1,6), # horizontal
+        bad_agents[1] : (0,3)  # veritcal
     },
-    debug=True
+    debug=False
 )
 
 goal = (4, 7)
@@ -59,18 +59,24 @@ while True:
         break
 
     # GOOD AGENT
-    path_good_agent = G.get_agent_move(good_agent, 
-        strategy = "A_star", 
-        min_bound = G.get_agent_position(good_agent),
-        max_bound = goal)
-    G.move_agent(good_agent, path_good_agent)    
+    # path_good_agent = G.get_agent_move(good_agent, 
+    #     strategy = "A_star", 
+    #     min_bound = G.get_agent_position(good_agent),
+    #     max_bound = goal)
+    # G.move_agent(good_agent, path_good_agent)    
     G.print()
     
     # BAD AGENTS
-    path_bad_agent_0 = G.get_agent_move(bad_agents[0], "horizontal", (1,6), (3,6))
+    path_bad_agent_0 = G.get_agent_move(bad_agents[0], 
+        strategy = "horizontal", 
+        min_bound = (1,6), 
+        max_bound = (3,6))
     G.move_agent(bad_agents[0], path_bad_agent_0)
     G.print()
     
-    path_bad_agent_1 = G.get_agent_move(bad_agents[1], "vertical", (0,3), (0,5))
+    path_bad_agent_1 = G.get_agent_move(bad_agents[1], 
+        strategy = "vertical", 
+        min_bound = (0,3), 
+        max_bound = (0,7))
     G.move_agent(bad_agents[1], path_bad_agent_1)
     G.print()

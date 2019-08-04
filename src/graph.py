@@ -132,9 +132,9 @@ class Graph:
 
         if strategy == "horizontal":
             direction_x = 0
-            if min_bound[0] <= x:
+            if min_bound[0] == x:
                 direction_x = 1
-            elif x >= max_bound[0]:
+            elif x == max_bound[0]:
                 direction_x = -1
             else:
                 # if in the middle, move randomly
@@ -144,9 +144,9 @@ class Graph:
 
         elif strategy == "vertical":
             direction_y = 0
-            if min_bound[1] <= y:
+            if min_bound[1] == y:
                 direction_y = 1
-            elif y >= max_bound[1]:
+            elif y == max_bound[1]:
                 direction_y = -1
             else:
                 # if in the middle, move randomly
@@ -236,7 +236,7 @@ class Graph:
         """Helper function to move droid client via vertex path specified.
          Return True if succssful, False otherwise.
         """
-        speed, scale_dist = 0x88, 1
+        speed, scale_dist = 0x48, 1
         cur_pos = path[0]
         for next_pos in path[1:]:
 
