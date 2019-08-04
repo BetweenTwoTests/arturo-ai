@@ -40,5 +40,21 @@ from collections import defaultdict
 # (0,0) ☐══☐══☐══☐══☐
 # --- start ---
 obstacles = defaultdict(bool)
+obstacle_edges = [
+    ((0,0), (0,1)),
+    ((1,0), (1,1))
+]
+for edges in obstacle_edges:
+    obstacles[edges] = True
+
 football_field = Graph(obstacles)
+
+
+
+
+
+
+
+    
+
 
