@@ -8,11 +8,13 @@ class Graph:
                 self.obstacles[(v[0], v[1]), (u[0], u[1])] 
 
 
-    def __init__(self, obstacles):
+    def __init__(self, obstacles, agent_positions = {}):
         self.row = 8# 8
         self.col = 5# 5
         self.obstacles = obstacles
         self.V = list(product(range(self.row), range(self.col)))
+        self.agent_positions = agent_positions
+        self.agent_names = agent_positions.keys()
 
         offsets = ((1,0), (0,1), (-1, 0), (0, -1))
         E = []
@@ -67,18 +69,33 @@ class Graph:
                 return new_pos
 
     def print(self):
-        neighbor_width = "       "
-        obstacle_width = " ------"
+        position_agent = {position: agent for agent, position in self.agent_positions.items()}
+
+        neighbor_width = "        "
+        obstacle_width = " ------ "
         bottom = [obstacle_width] * self.col
-        print("".join(bottom))
+        print(" " + "".join(bottom))
         for y in range(self.row-1, -1, -1):
             bottom = []
             for x in range(self.col):
-                print("|{0}".format((x,y)), end="")
+                cell = str((x,y)) #+ " " # extra space to line up with droid name
+                if (x,y) in position_agent:
+                    cell = position_agent[(x,y)]
+                    cell = cell.replace("-", "")
+                 
                 bottom_border = obstacle_width
+                left_border = "|" + (" " if x == 0 else "")
+                right_border = (" " if x == (self.col - 1) else "") + "|"
                 for valid_neighbor in self.neighbors((x,y)):
-                    if (not y == 0 and valid_neighbor[1] == (y - 1)):
-                        bottom_border = neighbor_width       
-                bottom.append(bottom_border)        
-            print("|",sep="")
-            print("".join(bottom))
+                    if (valid_neighbor[0] == (x - 1)):
+                        left_border = " "
+                    elif (valid_neighbor[0] == (x + 1)):
+                        right_border = " "
+                    elif (not y == 0 and valid_neighbor[1] == (y - 1)):
+                        bottom_border = neighbor_width
+                bottom.append(bottom_border)
+                print("{0}{1}{2}".format(
+                    left_border, cell, right_border
+                ), end = "")       
+            print("")
+            print("|" + "".join(bottom) + "|")
