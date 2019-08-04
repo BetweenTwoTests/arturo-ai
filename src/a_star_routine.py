@@ -39,6 +39,7 @@ class BadAgent:
             direction = 1 if (self.max_bound[1] - self.min_bound[1] - y) > 0 else -1
         elif self.direction == "random":
             # move randomly within the square drawn by (min_bound, max_bound)
+            # make sure to check for obstacles
             pass
         else:
             raise Exception("Bad Agent move direction is badly specified")
@@ -50,46 +51,48 @@ class BadAgent:
         self.position = new_position
         print("move bad bot: {0}".format([self.position, new_position]))
 
-# get course, find path
+
+good_agent = "Q5-8CC0"
+bad_agents = ["D2-6F8D", "D2-4D79"]
 G = courses.football_field
 G.agent_positions = {
-    "Q5-8CC0" : (0,0),
-    "D2-6F8D" : (1,6),
-    "D2-4D79" : (0,3)
+    good_agent : (0,0),
+    bad_agents[0] : (1,6),
+    bad_agents[1] : (0,3)
 }
 G.print()
 
-agent_droid = DroidClient()
-agent_droid.scan()
-agent_droid.connect_to_droid('Q5-8CC0') # Agent
-agent_start, agent_goal = (0, 0),  (4, 7)
+good_droid = DroidClient()
+good_droid.scan()
+good_droid.connect_to_droid('Q5-8CC0') # Agent
+goal = (4, 7)
 
 # Enemy droids
-# enemy_droid_horizontal = BadAgent('D2-6F8D', 
-#     direction = "horizontal", 
-#     position = (1, 6),
-#     min_bound = (1, 6), max_bound = (3, 6))
+enemy_droid_horizontal = BadAgent(bad_agents[0], 
+    direction = "horizontal", 
+    position = (1, 6),
+    min_bound = (1, 6), max_bound = (3, 6))
 
-# enemy_droid_vertical = BadAgent('D2-4D79', 
-#     direction = "vertical", 
-#     position = (0, 3),
-#     min_bound = (0, 3), max_bound = (0, 7))
+enemy_droid_vertical = BadAgent(bad_agents[1], 
+    direction = "vertical", 
+    position = (0, 3),
+    min_bound = (0, 3), max_bound = (0, 7))
 
 while True:
-    if(agent_start == agent_goal):
+    if(G.agent_positions[good_agent] == goal):
         break
-    
+
     # Print current game state
     print("#" * G.col * 8)
     G.print()
     print("#" * G.col * 8)
     #  AGENT
-    path = A_star(G, agent_start, agent_goal)
+    path = A_star(G, G.get_position(good_agent), goal)
     path = path[0:2]
     agent_start = path[1]
     print("move: {0}".format(path))
     # maneuver.follow_path(agent_droid, path, speed = 0x88, scale_dist = 1)
     
-    # # BAD AGEMTS
-    # enemy_droid_horizontal.move()
-    # enemy_droid_vertical.move()
+    # BAD AGENTS
+    enemy_droid_horizontal.move()
+    enemy_droid_vertical.move()
