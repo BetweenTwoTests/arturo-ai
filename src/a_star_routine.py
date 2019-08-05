@@ -41,6 +41,7 @@ obstacle_edges = [
     ((1,3), (2,3)), ((1,4), (2,4)), ((1,5), (2,5)),
     ((3,5), (4,5)), ((3,6), (4,6)), ((3,7), (4,7))
 ]
+
 for edges in obstacle_edges:
     obstacles[edges] = True
 
@@ -52,8 +53,8 @@ bad_agents = ["D2-4D79", "D2-6F8D"]
 good_agent1 = Warrior("D2-0709", (0, 0), True)
 # good_agent2 = Warrior('Q5-8CC0', (0, 4), True)
 
-bad_agent1 = Warrior("D2-4D79", (6, 0), False)
-bad_agent2 = Warrior("D2-6F8D", (6, 4), False)
+bad_agent1 = Warrior("D2-6F8D", (6, 0), False)
+# bad_agent2 = Warrior("D2-6F8D", (6, 4), False)
 
 
 G = Graph(
@@ -61,8 +62,8 @@ G = Graph(
     agent_positions = {
         good_agents[0] : (0,0),
         # good_agents[1]: (0,4),
-        bad_agents[0] : (1,6), # horizontal
-        bad_agents[1] : (0,3)  # veritcal
+        bad_agents[0] : (6,0)
+        # bad_agents[1] : (0,3)  # veritcal
     },
     debug=False
 )
@@ -77,7 +78,7 @@ while True:
     for warrior in warriors:
         if game_over:
             print("----- ENDING GAME -------")
-            return
+            break
 
         if warrior.get_is_good():
             game_over = good_droid_turn(warrior, G, goal, warriors)
