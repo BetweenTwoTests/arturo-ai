@@ -6,10 +6,12 @@ def good_droid_turn(droid, w, G, victory_state, warriors):
     if not (droid.get_is_alive()):
         print("YOU LOST")
         # droid falls over
-        game_over = True
+        return True
 
-    path = A_star(G, droid.get_location, victory_state)
+    path = A_star(G, droid.get_location(), victory_state)
     path = get_path(droid, path)
+    if not path:
+        return True # game over
 
     x, y = path[0]
     # Update grid states
@@ -18,7 +20,6 @@ def good_droid_turn(droid, w, G, victory_state, warriors):
     # Update grid so that old position (x,y) is now available for move into
     # while new position is not available into
     G.update_neighbors((x,y), droid.get_location())
-
     maneuver.follow_path(droid, path, speed = 0x88, scale_dist = 1)
 
     if droid in victory_state:
@@ -27,38 +28,42 @@ def good_droid_turn(droid, w, G, victory_state, warriors):
         agent_droid.animate(5)
         # headspin
     else:
-
         dist, bad_droid = get_nearest_opponent(droid.get_location(), warriors)
         if 1 < dist < 2:
             bad_droid.set_is_active(False)
             # headspin
-
-    return True
+    return False
 
 def bad_droid_turn(droid, warriors, G):
+
+    # Skip Droid's Turn
     if not droid.get_is_active():
         droid.set_is_active(True)
-        return
+        return False
 
     dist, closest_droid = get_nearest_opponent(droid.get_location(), warriors)
     path = a_star(G, droid.get_location(), closest_droid.get_location())
 
-    #TODO: update graph
-
-    if len(path) > 1:
-        if got_speed_boost():
-            path = path[0:3]
-        else:
-            path = path[0:2]
-    # path = get_path(droid, path)
-
+    path = get_path(droid, path)
+    if not path:
+        return True # game over
+    x, y = path[0]
+    # Update grid states
+    # Update agent's position
+    G.update_agent_position(droid.ID, droid.get_location())
+    # Update grid so that old position (x,y) is now available for move into
+    # while new position is not available into
+    G.update_neighbors((x,y), droid.get_location())
+    maneuver.follow_path(droid, path, speed = 0x88, scale_dist = 1)
+    
+    return False
 
 def launch_EMP(self, bad_guy):
     bad_guy.set_is_active(False)
-    use_weapon("EMP")
+    # use_weapon("EMP")
 
 def got_speed_boost():
-    return random.random() < 0.2
+    return (random.random() < 0.2)
 
 def get_nearest_opponent(location, warriors):
 
@@ -73,7 +78,6 @@ def get_nearest_opponent(location, warriors):
 
     return d_min, opponent
 
-
 def get_path(droid, path):
 
      if path is None:
@@ -81,10 +85,10 @@ def get_path(droid, path):
 
     if got_speed_boost():
         path = path[0:3]
-        droid.set_location = path[2]
+        droid.set_location(path[2])
     else:
         path = path[0:2]
-        droid.set_location = path[1]
+        droid.set_location(path[1])
 
     return path
 
