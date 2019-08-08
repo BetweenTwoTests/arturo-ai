@@ -1,5 +1,6 @@
 # arturo-ai
 The galactic headquarter for Arturo, the best AI bot for R2D2s.
+Some high level description of the game can be found here: https://docs.google.com/document/d/14aPOrLxfSBoWadTyhob8_FJdEKeyHdnsc7SKHT_BRuY/edit?usp=sharing
 
 # Instructions
 
